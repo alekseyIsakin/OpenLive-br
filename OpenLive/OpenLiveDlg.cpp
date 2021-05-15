@@ -15,7 +15,6 @@
 #define new DEBUG_NEW
 #endif
 
-
 // CAboutDlg dialog used for App About
 
 class CAboutDlg : public CDialogEx
@@ -321,13 +320,13 @@ void COpenLiveDlg::OnBnClickedBtnclose()
 
 LRESULT COpenLiveDlg::OnBackPage(WPARAM wParam, LPARAM lParam)
 {
-	if (m_lpCurDialog == &m_dlgSetup) {
-		m_lpCurDialog->ShowWindow(SW_HIDE);
-		m_lpCurDialog = &m_dlgEnterChannel;
-	}
+	//if (m_lpCurDialog == &m_dlgSetup) {
+	//	m_lpCurDialog->ShowWindow(SW_HIDE);
+	//	m_lpCurDialog = &m_dlgEnterChannel;
+	//}
 
-    m_nVideoProfile = m_dlgSetup.GetVideoSolution();
-    m_dlgEnterChannel.SetVideoString(m_dlgSetup.GetVideoSolutionDes());
+    //m_nVideoProfile = m_dlgSetup.GetVideoSolution();
+    //m_dlgEnterChannel.SetVideoString(m_dlgSetup.GetVideoSolutionDes());
 
 	m_lpCurDialog->ShowWindow(SW_SHOW);
 
@@ -337,8 +336,8 @@ LRESULT COpenLiveDlg::OnBackPage(WPARAM wParam, LPARAM lParam)
 LRESULT COpenLiveDlg::OnNextPage(WPARAM wParam, LPARAM lParam)
 {
 	m_lpCurDialog->ShowWindow(SW_HIDE);
-	if (m_lpCurDialog == &m_dlgEnterChannel)
-			m_lpCurDialog = &m_dlgSetup;
+	//if (m_lpCurDialog == &m_dlgEnterChannel)
+	//		m_lpCurDialog = &m_dlgSetup;
 
 	m_lpCurDialog->ShowWindow(SW_SHOW);
 
@@ -374,18 +373,34 @@ LRESULT COpenLiveDlg::OnJoinChannel(WPARAM wParam, LPARAM lParam)
 	vc.renderMode = RENDER_MODE_TYPE::RENDER_MODE_FIT;
 
 	//cancel setVideoProfile bitrate since version 2.1.0
-	int nVideoSolution = m_dlgSetup.GetVideoSolution();
+	//int nVideoSolution = m_dlgSetup.GetVideoSolution();
 	//lpRtcEngine->setVideoProfile((VIDEO_PROFILE_TYPE)nVideoSolution, m_dlgSetup.IsWHSwap());
 
 	VideoEncoderConfiguration config;
-	config.bitrate = m_dlgSetup.GetBirate();
-	config.frameRate = (FRAME_RATE)m_dlgSetup.GetFPS();
-	SIZE resolution = m_dlgSetup.GetVideoResolution();
+	//config.bitrate = m_dlgSetup.GetBirate();
+	//config.frameRate = (FRAME_RATE)m_dlgSetup.GetFPS();
+	//SIZE resolution = m_dlgSetup.GetVideoResolution();
+	//config.dimensions.width = resolution.cx;
+	//config.dimensions.height = resolution.cy;
+	//lpRtcEngine->setVideoEncoderConfiguration(config);
+
+	////////////////////////////////////
+	config.bitrate = BASE_BITRATE;
+	config.frameRate = BASE_FRAME_RATE;
+
+	SIZE resolution = BASE_RESOLUTION;
 	config.dimensions.width = resolution.cx;
 	config.dimensions.height = resolution.cy;
-	lpRtcEngine->setVideoEncoderConfiguration(config);
+	config.degradationPreference = MAINTAIN_QUALITY;
+	config.orientationMode = ORIENTATION_MODE_ADAPTIVE;
 
-	m_dlgVideo.SetWindowText(strChannelName);
+	//lpRtcEngine->setVideoProfile(VIDEO_PROFILE_LANDSCAPE_480P_4, m_dlgSetup.IsWHSwap());
+	lpRtcEngine->setVideoProfile(VIDEO_PROFILE_LANDSCAPE_480P_4, false);
+	lpRtcEngine->setAudioProfile(AUDIO_PROFILE_SPEECH_STANDARD, AUDIO_SCENARIO_MEETING);
+	lpRtcEngine->setVideoEncoderConfiguration(config);
+	m_dlgVideo.SetWindowText(_T("RSI Exchange Interpreter Desktop"));
+	///////////////////////////////////
+
 	lpRtcEngine->setupLocalVideo(vc);
 	lpRtcEngine->startPreview();
 

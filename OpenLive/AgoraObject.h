@@ -20,6 +20,10 @@ using namespace agora::base;
 #define AG_ENGFLAG_NSON			0x00000200	// Noise reduction
 #define AG_ENGFLAG_AECON		0x00000400	// Echo Cancellation
 
+#define BASE_BITRATE 1500
+#define	BASE_FRAME_RATE (FRAME_RATE)30
+#define	BASE_RESOLUTION SIZE { 640, 480 }
+
 /* NOTE:
 	PLEASE KEEP THIS App ID IN SAFE PLACE
     Get your own App ID at https://dashboard.agora.io/
@@ -88,7 +92,7 @@ public:
 	BOOL EnableVideo(BOOL bEnable = TRUE);
 	BOOL IsVideoEnabled();
 
-	BOOL EnableScreenCapture(HWND hWnd, int nCapFPS = 15, LPCRECT lpCapRect = NULL, BOOL bEnable = TRUE, int nBitrate = 0);
+	BOOL EnableScreenCapture(HWND hWnd, int nCapFPS = 0, LPCRECT lpCapRect = NULL, BOOL bEnable = TRUE, int nBitrate = 0);
 	BOOL IsScreenCaptureEnabled();
 
 	BOOL MuteLocalAudio(BOOL bMuted = TRUE);

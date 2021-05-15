@@ -491,7 +491,7 @@ void CVideoDlg::OnBnClickedScreenshare()
 {
 	IRtcEngine *lpRtcEngine = CAgoraObject::GetEngine();
 	
-	CAgoraObject::GetAgoraObject()->EnableScreenCapture(NULL, 15, NULL, TRUE);
+	CAgoraObject::GetAgoraObject()->EnableScreenCapture(NULL, BASE_FRAME_RATE, NULL, TRUE, BASE_BITRATE);
 	m_btnScrCap.SwitchButtonStatus(CAGButton::AGBTN_PUSH);
 
 	m_wndLocal.Invalidate(TRUE);
@@ -1045,7 +1045,7 @@ LRESULT CVideoDlg::OnWindowShareStart(WPARAM wParam, LPARAM lParam)
 	//	m_wndLocal.Invalidate(TRUE);
 	}
 
-	CAgoraObject::GetAgoraObject()->EnableScreenCapture((HWND)wParam, 15, NULL, TRUE);
+	CAgoraObject::GetAgoraObject()->EnableScreenCapture((HWND)wParam, BASE_FRAME_RATE, NULL, TRUE, BASE_BITRATE);
 	m_btnScrCap.SwitchButtonStatus(CAGButton::AGBTN_PUSH);
 
 	return 0;

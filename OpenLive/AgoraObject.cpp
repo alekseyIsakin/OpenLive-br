@@ -359,30 +359,36 @@ BOOL CAgoraObject::EnableScreenCapture(HWND hWnd, int nCapFPS, LPCRECT lpCapRect
 
 	agora::rtc::Rectangle rcCap;
 	ScreenCaptureParameters capParam;
-	capParam.bitrate = nBitrate;
-	capParam.frameRate = nCapFPS;
+
+	capParam.bitrate	= nBitrate < BASE_BITRATE	? nBitrate : BASE_BITRATE;
+	capParam.frameRate	= nCapFPS < BASE_FRAME_RATE	? nCapFPS  : BASE_FRAME_RATE;
 
 	if (bEnable) {
 		if (lpCapRect == NULL){
 			RECT rc;
 			if (hWnd){
 				::GetWindowRect(hWnd, &rc);
-				capParam.dimensions.width = rc.right - rc.left;
-				capParam.dimensions.height = rc.bottom - rc.top;
+				SIZE resol = { rc.right - rc.left, rc.bottom - rc.top };
+				
+				capParam.dimensions.width  = resol.cx < BASE_RESOLUTION.cx ? resol.cx : BASE_RESOLUTION.cx;
+				capParam.dimensions.height = resol.cy < BASE_RESOLUTION.cy ? resol.cy : BASE_RESOLUTION.cy;
+
 				ret = m_lpAgoraEngine->startScreenCaptureByWindowId(hWnd, rcCap, capParam);
 			}
 			else{
 				GetWindowRect(GetDesktopWindow(), &rc);
 				agora::rtc::Rectangle screenRegion = { rc.left, rc.right, rc.right - rc.left, rc.bottom - rc.top };
-				capParam.dimensions.width = rc.right - rc.left;
-				capParam.dimensions.height = rc.bottom - rc.top;
+				SIZE resol = { rc.right - rc.left, rc.bottom - rc.top };
+				capParam.dimensions.width = resol.cx < BASE_RESOLUTION.cx ? resol.cx : BASE_RESOLUTION.cx;
+				capParam.dimensions.height = resol.cy < BASE_RESOLUTION.cy ? resol.cy : BASE_RESOLUTION.cy;
 				ret = m_lpAgoraEngine->startScreenCaptureByScreenRect(screenRegion, rcCap, capParam);
 			}
 			//startScreenCapture(hWnd, nCapFPS, NULL, nBitrate);
 		}
 		else {
-			capParam.dimensions.width = lpCapRect->right - lpCapRect->left;
-			capParam.dimensions.height = lpCapRect->bottom - lpCapRect->top;
+			SIZE resol = { lpCapRect->right - lpCapRect->left, lpCapRect->bottom - lpCapRect->top };
+			capParam.dimensions.width = resol.cx < BASE_RESOLUTION.cx ? resol.cx : BASE_RESOLUTION.cx;
+			capParam.dimensions.height = resol.cy < BASE_RESOLUTION.cy ? resol.cy : BASE_RESOLUTION.cy;
 
 			rcCap.x = lpCapRect->left;
 			rcCap.y = lpCapRect->top;
